@@ -1,0 +1,6 @@
+model:
+  num_layers: 4
+  num_hidden: [32,32,32,32]
+  filter_size: 5
+  stride: 1
+  layer_norm: 1
