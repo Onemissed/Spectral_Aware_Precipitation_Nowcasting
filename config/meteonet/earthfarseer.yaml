@@ -1,0 +1,8 @@
+model:
+  shape_in: [5, 1, 128, 128]
+  hid_S: 32
+  hid_T: 256
+  N_S: 4
+  N_T: 4
+  N_hid: 8
+  N_skip: 4
