@@ -62,13 +62,22 @@ We use **CIKM** and **SEVIR-LR** dataset for training and evaluation:
    * **Download**:
       Visit [https://meteonet.umr-cnrm.fr/dataset/data/NW/radar/reflectivity_old_product/](https://meteonet.umr-cnrm.fr/dataset/data/NW/radar/reflectivity_old_product/)
    
-   * **Directory layout**:
-      Download and extract into `data/meteonet/` so that you have:
+   * **Processing**:
+   We provide two helper scripts to convert the raw npz file into NumPy arrays and to split out individual precipitation events
+        ```
+        # 1) Save each radar data into a single .npy file and downsampling these data
+             python save_meteonet.py
+     
+        # 2) Using sliding window approach to partition model inputs and ground truth data
+             python split_meteonet.py
+        ```
+   * **Directory layout after processing**:
        ```
-       data/meteonet/
-       ├── 2016/
-       ├── 2017/
-       └── 2018/
+       data/meteonet/data/nw/reflectivity_split/
+       ├── 20160101_0000.npy
+       ├── 20160101_0115.npy
+       ├── ......
+       └── 20181031_2120.npy
        ```
      
 3. **SEVIR-LR dataset**:
@@ -76,13 +85,16 @@ We use **CIKM** and **SEVIR-LR** dataset for training and evaluation:
       Visit [https://deep-earth.s3.amazonaws.com/datasets/sevir_lr.zip](https://deep-earth.s3.amazonaws.com/datasets/sevir_lr.zip)
    
    * **Processing**:
-      We provide two helper scripts to convert the raw HDF5 file into NumPy arrays and to split out individual precipitation events
+      We provide three helper scripts to convert the raw HDF5 file into NumPy arrays and to split out individual precipitation events
         ```
         # 1) Convert the raw .h5 file to .npy array
              python process_sevir.py
         
         # 2) Split each precipitation event into a single .npy file
              python save_sevir.py
+     
+        # 3) Use sliding window to split each precipitation event into 3 npy files.
+             python split_sevir.py
         ```
    * **Directory layout after processing**:
      ```
@@ -107,7 +119,17 @@ We use **CIKM** and **SEVIR-LR** dataset for training and evaluation:
       --gpus 0
     ```
 
-2. **For SEVIR-LR dataset**:
+2. **For MeteoNet dataset**:
+    ```
+    python train_meteonet.py \
+      --model m_afno \
+      --batchsize 16 \
+      --epoch 100 \
+      --lr 1e-3 \
+      --gpus 0
+    ```
+
+3. **For SEVIR-LR dataset**:
     ```
     python train_sevir.py \
       --model m_afno \
@@ -115,9 +137,4 @@ We use **CIKM** and **SEVIR-LR** dataset for training and evaluation:
       --epoch 100 \
       --lr 1e-3 \
       --gpus 0
-    ```
-   
-3. **For MeteoNet dataset**:
-    ```
-    to be done
     ```
